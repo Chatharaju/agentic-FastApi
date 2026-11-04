@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+google-adk
+python-dotenv
+httpx
+python-multipart
+pydantic-settings
+email-validator
+sqlalchemy
+alembic
+psycopg
