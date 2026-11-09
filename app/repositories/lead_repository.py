@@ -26,3 +26,12 @@ class LeadRepository:
     def list(self) -> list[Lead]:
         statement = select(Lead).order_by(Lead.created_at.desc())
         return list(self.db.scalars(statement).all())
+
+    def search_by_name(self, name: str) -> "list[Lead]":
+        statement = (
+            select(Lead)
+            .where(Lead.name.ilike(f"%{name}%"))
+            .order_by(Lead.created_at.desc())
+            .limit(10)
+        )
+        return list(self.db.scalars(statement).all())

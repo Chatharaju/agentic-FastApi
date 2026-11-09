@@ -25,3 +25,11 @@ class CustomerRepository:
     def list(self) -> list[Customer]:
         statement = select(Customer).order_by(Customer.created_at.desc())
         return list(self.db.scalars(statement).all())
+    
+    def search_by_name(self, name: str) -> "list[Customer]":
+        statement = (
+            select(Customer)
+            .where(Customer.name.ilike(f"%{name}%"))
+            .order_by(Customer.name.asc())
+            .limit(10))
+        return list(self.db.scalars(statement).all())

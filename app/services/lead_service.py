@@ -29,3 +29,6 @@ class LeadService:
 
     def list_leads(self) -> list[Lead]:
         return self.repository.list()
+
+    def search_leads(self, name: str) -> list[Lead]:
+        return self.repository.search_by_name(name)

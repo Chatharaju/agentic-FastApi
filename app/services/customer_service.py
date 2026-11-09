@@ -27,3 +27,6 @@ class CustomerService:
 
     def list_customers(self) -> list[Customer]:
         return self.repository.list()
+    
+    def search_customers(self, name: str) -> list:
+        return self.repository.search_by_name(name)
