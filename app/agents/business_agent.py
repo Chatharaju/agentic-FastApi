@@ -1,5 +1,6 @@
 from google.adk.agents import Agent
 from app.tools.customer_tools import search_customers
+from app.tools.lead_tools import search_leads
 
 root_agent = Agent(
     name="business_assistant",
@@ -41,5 +42,6 @@ unless the corresponding tool actually completed it.
 """,
     tools=[
         search_customers,
+        search_leads
     ],
 )

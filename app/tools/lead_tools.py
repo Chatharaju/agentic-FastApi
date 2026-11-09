@@ -1,61 +1,41 @@
-from app.models.business import Lead
-from app.services.business_store import leads
+from app.db.session import SessionLocal
+from app.repositories.lead_repository import LeadRepository
+from app.services.lead_service import LeadService
 
 
-def create_lead(
-    customer_id: str,
-    service: str,
-    source: str = "ai_assistant",
-) -> dict:
+def search_leads(name: str) -> dict:
     """
-    Create a new lead for a customer.
-    """
+    Search for existing business leads by name.
 
-    lead_id = f"LEAD-{len(leads) + 1:03d}"
-
-    lead = Lead(
-        id=lead_id,
-        customer_id=customer_id,
-        service=service,
-        status="new",
-        source=source,
-    )
-
-    leads.append(lead)
-
-    return {
-        "success": True,
-        "lead": {
-            "id": lead.id,
-            "customer_id": lead.customer_id,
-            "service": lead.service,
-            "status": lead.status,
-            "source": lead.source,
-        },
-    }
-
-
-def get_customer_leads(customer_id: str) -> dict:
-    """
-    Get leads belonging to a customer.
+    Use this tool when a business owner wants to
+    find an enquiry or potential customer.
     """
 
-    customer_leads = [
-        lead
-        for lead in leads
-        if lead.customer_id == customer_id
-    ]
+    if not name or not name.strip():
+        return {
+            "success": False,
+            "message": "Lead name is required.",
+        }
 
-    return {
-        "count": len(customer_leads),
-        "leads": [
-            {
-                "id": lead.id,
-                "customer_id": lead.customer_id,
-                "service": lead.service,
-                "status": lead.status,
-                "source": lead.source,
-            }
-            for lead in customer_leads
-        ],
-    }
+    with SessionLocal() as db:
+        repository = LeadRepository(db)
+        service = LeadService(repository)
+
+        leads = service.search_leads(name.strip())
+
+        return {
+            "success": True,
+            "count": len(leads),
+            "leads": [
+                {
+                    "id": str(lead.id),
+                    "name": lead.name,
+                    "email": lead.email,
+                    "phone": lead.phone,
+                    "service_type": lead.service_type,
+                    "description": lead.description,
+                    "status": lead.status,
+                }
+                for lead in leads
+            ],
+        }
