@@ -1,7 +1,5 @@
 from google.adk.agents import Agent
-
-# from app.tools.quote_tools import estimate_job
-
+from app.tools.customer_tools import search_customers
 
 root_agent = Agent(
     name="business_assistant",
@@ -42,6 +40,6 @@ Never claim that an external action was completed
 unless the corresponding tool actually completed it.
 """,
     tools=[
-        # estimate_job,
+        search_customers,
     ],
 )
